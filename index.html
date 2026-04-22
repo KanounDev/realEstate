@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Maison Lumière — À Louer</title>
+
+    <!-- Google Fonts: Cormorant Garamond (display) + DM Sans (body) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+
+    <style>
+        /* ============================================================
+       VARIABLES CSS
+    ============================================================ */
+        
+         :root {
+            --cream: #f7f4ef;
+            --ivory: #fdfcfa;
+            --stone: #e8e3db;
+            --taupe: #b8ae9f;
+            --charcoal: #2c2825;
+            --warm-dark: #1a1714;
+            --accent: #c9a96e;
+            --accent-lt: #e8d5b0;
+            --white: #ffffff;
+            --font-display: 'Cormorant Garamond', Georgia, serif;
+            --font-body: 'DM Sans', sans-serif;
+            --radius-sm: 6px;
+            --radius-md: 14px;
+            --radius-lg: 24px;
+            --shadow-soft: 0 4px 24px rgba(44, 40, 37, .10);
+            --shadow-card: 0 8px 48px rgba(44, 40, 37, .14);
+            --shadow-btn: 0 2px 12px rgba(44, 40, 37, .18);
+            --transition: .42s cubic-bezier(.4, 0, .2, 1);
+        }
+        /* ============================================================
+       RESET & BASE
+    ============================================================ */
+        
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        body {
+            background: var(--cream);
+            color: var(--charcoal);
+            font-family: var(--font-body);
+            font-weight: 300;
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+        }
+        /* ============================================================
+       CONTENEUR PRINCIPAL
+    ============================================================ */
+        
+        .page-wrapper {
+            max-width: 1020px;
+            margin: 0 auto;
+            padding: 48px 20px 80px;
+        }
+        /* ============================================================
+       BARRE DE MARQUE
+    ============================================================ */
+        
+        .brand-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 40px;
+        }
+        
+        .brand-logo {
+            font-family: var(--font-display);
+            font-size: 1.25rem;
+            font-weight: 300;
+            letter-spacing: .18em;
+            text-transform: uppercase;
+            color: var(--charcoal);
+        }
+        
+        .brand-logo span {
+            color: var(--accent);
+        }
+        
+        .badge {
+            font-family: var(--font-body);
+            font-size: .68rem;
+            font-weight: 500;
+            letter-spacing: .12em;
+            text-transform: uppercase;
+            background: var(--accent);
+            color: var(--white);
+            padding: 5px 14px;
+            border-radius: 40px;
+        }
+        /* ============================================================
+       EN-TÊTE PRINCIPAL
+    ============================================================ */
+        
+        .hero-header {
+            margin-bottom: 28px;
+        }
+        
+        .listing-eyebrow {
+            font-family: var(--font-body);
+            font-size: .72rem;
+            font-weight: 500;
+            letter-spacing: .2em;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: 10px;
+        }
+        
+        .listing-title {
+            font-family: var(--font-display);
+            font-size: clamp(2.2rem, 5vw, 3.4rem);
+            font-weight: 300;
+            line-height: 1.12;
+            color: var(--warm-dark);
+        }
+        
+        .listing-title em {
+            font-style: italic;
+            color: var(--accent);
+        }
+        /* ============================================================
+       SLIDER D'IMAGES — FONCTIONNALITÉ PRINCIPALE
+    ============================================================ */
+        
+        .slider-shell {
+            position: relative;
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow-card);
+            background: var(--charcoal);
+            user-select: none;
+            aspect-ratio: 16 / 9;
+            max-height: 560px;
+        }
+        /* Piste contenant toutes les diapositives côte à côte */
+        
+        .slider-track {
+            display: flex;
+            height: 100%;
+            transition: transform .55s cubic-bezier(.77, 0, .18, 1);
+            will-change: transform;
+        }
+        /* Diapositive individuelle */
+        
+        .slide {
+            flex: 0 0 100%;
+            height: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+            display: block;
+            transition: transform 8s ease-out;
+            transform: scale(1.03);
+        }
+        
+        .slide.is-active img {
+            transform: scale(1);
+        }
+        /* Étiquette de pièce en superposition */
+        
+        .slide-label {
+            position: absolute;
+            bottom: 22px;
+            left: 24px;
+            background: rgba(26, 23, 20, .55);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            color: var(--white);
+            font-family: var(--font-body);
+            font-size: .74rem;
+            font-weight: 400;
+            letter-spacing: .14em;
+            text-transform: uppercase;
+            padding: 6px 16px;
+            border-radius: 40px;
+            border: 1px solid rgba(255, 255, 255, .15);
+            opacity: 0;
+            transform: translateY(6px);
+            transition: opacity .35s ease .1s, transform .35s ease .1s;
+        }
+        
+        .slide.is-active .slide-label {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        /* Compteur en haut à droite */
+        
+        .slide-counter {
+            position: absolute;
+            top: 20px;
+            right: 24px;
+            background: rgba(26, 23, 20, .45);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            color: rgba(255, 255, 255, .85);
+            font-family: var(--font-display);
+            font-size: 1rem;
+            font-weight: 300;
+            letter-spacing: .06em;
+            padding: 4px 14px;
+            border-radius: 40px;
+            border: 1px solid rgba(255, 255, 255, .12);
+            pointer-events: none;
+            z-index: 10;
+        }
+        /* ── Boutons fléchés ── */
+        
+        .arrow-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 20;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            border: 1.5px solid rgba(255, 255, 255, .3);
+            background: rgba(255, 255, 255, .12);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            color: var(--white);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--shadow-btn);
+            transition: background var(--transition), border-color var(--transition), transform .2s ease, box-shadow var(--transition);
+            outline: none;
+        }
+        
+        .arrow-btn:hover {
+            background: rgba(201, 169, 110, .75);
+            border-color: transparent;
+            transform: translateY(-50%) scale(1.08);
+            box-shadow: 0 4px 20px rgba(201, 169, 110, .4);
+        }
+        
+        .arrow-btn:active {
+            transform: translateY(-50%) scale(.96);
+        }
+        
+        .arrow-btn.prev {
+            left: 18px;
+        }
+        
+        .arrow-btn.next {
+            right: 18px;
+        }
+        
+        .arrow-btn svg {
+            width: 18px;
+            height: 18px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+        /* ── Points indicateurs ── */
+        
+        .dots-row {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            margin-top: 18px;
+        }
+        
+        .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--taupe);
+            cursor: pointer;
+            transition: background var(--transition), width var(--transition);
+            border: none;
+            outline: none;
+            padding: 0;
+        }
+        
+        .dot.is-active {
+            background: var(--accent);
+            width: 24px;
+            border-radius: 4px;
+        }
+        
+        .dot:hover:not(.is-active) {
+            background: var(--charcoal);
+        }
+        /* Curseur de glissement */
+        
+        .slider-shell.is-dragging {
+            cursor: grabbing;
+        }
+        
+        .slider-shell:not(.is-dragging) {
+            cursor: grab;
+        }
+        /* ============================================================
+       SÉPARATEUR DÉCORATIF
+    ============================================================ */
+        
+        .divider {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin: 44px 0 36px;
+        }
+        
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--stone);
+        }
+        
+        .divider-icon {
+            color: var(--accent);
+            font-size: 1.1rem;
+            line-height: 1;
+        }
+        /* ============================================================
+       STATISTIQUES DU BIEN
+    ============================================================ */
+        
+        .stats-row {
+            display: flex;
+            background: var(--ivory);
+            border: 1px solid var(--stone);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            box-shadow: var(--shadow-soft);
+            margin-bottom: 40px;
+        }
+        
+        .stat-cell {
+            flex: 1;
+            padding: 22px 20px;
+            text-align: center;
+            border-right: 1px solid var(--stone);
+        }
+        
+        .stat-cell:last-child {
+            border-right: none;
+        }
+        
+        .stat-value {
+            font-family: var(--font-display);
+            font-size: 1.9rem;
+            font-weight: 300;
+            color: var(--warm-dark);
+            line-height: 1;
+            margin-bottom: 4px;
+        }
+        
+        .stat-label {
+            font-size: .68rem;
+            font-weight: 500;
+            letter-spacing: .14em;
+            text-transform: uppercase;
+            color: var(--taupe);
+        }
+        /* ============================================================
+       SECTION DESCRIPTION
+    ============================================================ */
+        
+        .desc-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 32px;
+            align-items: start;
+        }
+        
+        @media (max-width: 640px) {
+            .desc-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .desc-block h2 {
+            font-family: var(--font-display);
+            font-size: 1.8rem;
+            font-weight: 300;
+            color: var(--warm-dark);
+            line-height: 1.3;
+            margin-bottom: 16px;
+        }
+        
+        .desc-block p {
+            font-size: .92rem;
+            line-height: 1.8;
+            color: #6b6560;
+        }
+        /* Liste des pièces */
+        
+        .rooms-block h3 {
+            font-family: var(--font-display);
+            font-size: 1.15rem;
+            font-weight: 600;
+            letter-spacing: .02em;
+            color: var(--warm-dark);
+            margin-bottom: 18px;
+        }
+        
+        .room-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .room-list li {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            font-size: .88rem;
+            line-height: 1.65;
+            color: #5a554f;
+        }
+        
+        .room-list li::before {
+            content: '';
+            flex-shrink: 0;
+            margin-top: 9px;
+            width: 18px;
+            height: 1px;
+            background: var(--accent);
+        }
+        /* ============================================================
+       BARRE LOYER / APPEL À L'ACTION
+    ============================================================ */
+        
+        .cta-bar {
+            margin-top: 48px;
+            background: var(--warm-dark);
+            border-radius: var(--radius-lg);
+            padding: 32px 36px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 24px;
+            flex-wrap: wrap;
+            box-shadow: var(--shadow-card);
+        }
+        
+        .price-label {
+            font-size: .68rem;
+            font-weight: 500;
+            letter-spacing: .18em;
+            text-transform: uppercase;
+            color: var(--taupe);
+            margin-bottom: 4px;
+        }
+        
+        .price-value {
+            font-family: var(--font-display);
+            font-size: 2.4rem;
+            font-weight: 300;
+            color: var(--white);
+            line-height: 1;
+        }
+        
+        .price-value sup {
+            font-size: 1rem;
+            vertical-align: super;
+            margin-right: 3px;
+        }
+        
+        .price-per {
+            font-size: .95rem;
+            font-family: var(--font-body);
+            color: var(--taupe);
+            margin-left: 4px;
+        }
+        
+        .cta-actions {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 13px 28px;
+            border-radius: 40px;
+            font-family: var(--font-body);
+            font-size: .8rem;
+            font-weight: 500;
+            letter-spacing: .1em;
+            text-transform: uppercase;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background var(--transition), color var(--transition), transform .2s ease, box-shadow var(--transition);
+            border: none;
+            outline: none;
+        }
+        
+        .btn-primary {
+            background: var(--accent);
+            color: var(--white);
+            box-shadow: 0 4px 18px rgba(201, 169, 110, .35);
+        }
+        
+        .btn-primary:hover {
+            background: #d4b07a;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 28px rgba(201, 169, 110, .45);
+        }
+        
+        .btn-ghost {
+            background: transparent;
+            color: rgba(255, 255, 255, .75);
+            border: 1px solid rgba(255, 255, 255, .2);
+        }
+        
+        .btn-ghost:hover {
+            background: rgba(255, 255, 255, .08);
+            color: var(--white);
+            transform: translateY(-2px);
+        }
+        /* ============================================================
+       ADAPTATIONS MOBILES
+    ============================================================ */
+        
+        @media (max-width: 480px) {
+            .stats-row {
+                flex-wrap: wrap;
+            }
+            .stat-cell {
+                flex: 0 0 50%;
+                border-bottom: 1px solid var(--stone);
+            }
+            .stat-cell:nth-child(2) {
+                border-right: none;
+            }
+            .stat-cell:nth-child(3) {
+                border-bottom: none;
+            }
+            .stat-cell:nth-child(4) {
+                border-right: none;
+                border-bottom: none;
+            }
+            .cta-bar {
+                padding: 24px 20px;
+            }
+            .arrow-btn {
+                width: 38px;
+                height: 38px;
+            }
+            .arrow-btn.prev {
+                left: 10px;
+            }
+            .arrow-btn.next {
+                right: 10px;
+            }
+            .brand-bar {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="page-wrapper">
+
+        <!-- ══════════════════════════════════
+       BARRE DE MARQUE
+  ═══════════════════════════════════ -->
+        <header class="brand-bar">
+            <div class="brand-logo">Maison<span>·</span>Lumière</div>
+            <span class="badge">À Louer</span>
+        </header>
+
+        <!-- ══════════════════════════════════
+       EN-TÊTE PRINCIPAL
+  ═══════════════════════════════════ -->
+        <div class="hero-header">
+            <p class="listing-eyebrow">Visite Intérieure — 5 Pièces</p>
+            <h1 class="listing-title">Maison Familiale Chaleureuse<br><em>au Caractère Authentique</em></h1>
+        </div>
+
+        <!-- ══════════════════════════════════
+       SLIDER D'IMAGES
+  ═══════════════════════════════════ -->
+        <div class="slider-shell" id="slider" aria-label="Galerie de photos de l'intérieur" role="region">
+
+            <!-- Compteur -->
+            <div class="slide-counter" id="counter" aria-live="polite">1 / 5</div>
+
+            <!-- Piste des diapositives -->
+            <div class="slider-track" id="track">
+
+                <!-- Diapositive 1 : Chambre Double -->
+                <div class="slide is-active" role="group" aria-label="Chambre Double">
+                    <img src="Living_room.png" alt="Chambre double avec deux lits en bois sculpté à têtes de lit capitonnées, tapis persan rouge et table de chevet dorée" draggable="false" />
+                    <span class="slide-label">Chambre Double</span>
+                </div>
+
+                <!-- Diapositive 2 : Cuisine -->
+                <div class="slide" role="group" aria-label="Cuisine">
+                    <img src="Kitchen.png" alt="Cuisine avec carrelage terracotta, réfrigérateur rétro rose pâle, plaque de cuisson à gaz et desserte en bois" draggable="false" />
+                    <span class="slide-label">Cuisine</span>
+                </div>
+
+                <!-- Diapositive 3 : Salle de Bain -->
+                <div class="slide" role="group" aria-label="Salle de Bain">
+                    <img src="Bathroom.png" alt="Salle de bain carrelée en bleu cobalt avec baignoire encastrée, robinetterie chromée et fenêtre naturelle" draggable="false" />
+                    <span class="slide-label">Salle de Bain</span>
+                </div>
+
+                <!-- Diapositive 4 : Chambre Simple -->
+                <div class="slide" role="group" aria-label="Chambre Simple">
+                    <img src="Bedroom.png" alt="Chambre simple épurée au style minimaliste avec lit blanc, table basse, chaise et bureau mural" draggable="false" />
+                    <span class="slide-label">Chambre Simple</span>
+                </div>
+
+                <!-- Diapositive 5 : Chambre Partagée -->
+                <div class="slide" role="group" aria-label="Chambre Partagée">
+                    <img src="Bedroom2.png" alt="Chambre lumineuse avec lit en bois sculpté, second couchage sur sommier en bois, tapis oriental et succulente" draggable="false" />
+                    <span class="slide-label">Chambre Partagée</span>
+                </div>
+
+            </div>
+            <!-- /track -->
+
+            <!-- Boutons fléchés -->
+            <button class="arrow-btn prev" id="btnPrev" aria-label="Image précédente">
+      <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+    </button>
+            <button class="arrow-btn next" id="btnNext" aria-label="Image suivante">
+      <svg viewBox="0 0 24 24"><polyline points="9 6 15 12 9 18"/></svg>
+    </button>
+
+        </div>
+        <!-- /slider-shell -->
+
+        <!-- Points indicateurs -->
+        <div class="dots-row" id="dots" role="tablist" aria-label="Sélectionner une image">
+            <button class="dot is-active" role="tab" aria-selected="true" aria-label="Image 1"></button>
+            <button class="dot" role="tab" aria-selected="false" aria-label="Image 2"></button>
+            <button class="dot" role="tab" aria-selected="false" aria-label="Image 3"></button>
+            <button class="dot" role="tab" aria-selected="false" aria-label="Image 4"></button>
+            <button class="dot" role="tab" aria-selected="false" aria-label="Image 5"></button>
+        </div>
+
+        <!-- ══════════════════════════════════
+       SÉPARATEUR DÉCORATIF
+  ═══════════════════════════════════ -->
+        <div class="divider"><span class="divider-icon">◆</span></div>
+
+        <!-- ══════════════════════════════════
+       STATISTIQUES DU BIEN
+  ═══════════════════════════════════ -->
+        <div class="stats-row" role="list" aria-label="Caractéristiques du bien">
+            <div class="stat-cell" role="listitem">
+                <div class="stat-value">3</div>
+                <div class="stat-label">Chambres</div>
+            </div>
+            <div class="stat-cell" role="listitem">
+                <div class="stat-value">1</div>
+                <div class="stat-label">Salle de Bain</div>
+            </div>
+            <div class="stat-cell" role="listitem">
+                <div class="stat-value">95</div>
+                <div class="stat-label">m²</div>
+            </div>
+            <div class="stat-cell" role="listitem">
+                <div class="stat-value">5</div>
+                <div class="stat-label">Pièces</div>
+            </div>
+        </div>
+
+        <!-- ══════════════════════════════════
+       DESCRIPTION + LISTE DES PIÈCES
+  ═══════════════════════════════════ -->
+        <div class="desc-grid">
+
+            <!-- Gauche : description narrative -->
+            <div class="desc-block">
+                <h2>Une maison pleine de chaleur, de lumière et de caractère</h2>
+                <p>
+                    Nichée dans un quartier calme et agréable, cette maison familiale marie avec élégance le charme traditionnel et le confort du quotidien. Les carrelages colorés, le mobilier en bois massif et les tapis orientaux confèrent à chaque pièce une identité forte
+                    et une atmosphère authentiquement chaleureuse.
+                </p>
+                <br />
+                <p>
+                    Chaque espace a été aménagé avec soin pour allier praticité et esthétique : une cuisine fonctionnelle équipée, des chambres confortables aux ambiances distinctes et une salle de bain lumineuse. La maison est disponible à la location immédiatement, idéale
+                    pour une famille ou un groupe d'amis.
+                </p>
+            </div>
+
+            <!-- Droite : liste des pièces (descriptions fidèles aux photos) -->
+            <div class="rooms-block">
+                <h3>Les Pièces</h3>
+                <ul class="room-list">
+                    <li>
+                        <strong>Chambre Double</strong> — Deux lits individuels en bois massif sculpté avec têtes de lit capitonnées beige, oreillers moelleux et couverture en laine verte. Tapis persan aux motifs floraux rouges et bleus, table de chevet
+                        dorée avec vase et livres.
+                    </li>
+                    <li>
+                        <strong>Cuisine</strong> — Cuisine équipée avec grand carrelage terracotta et frise décorative, réfrigérateur rétro rose pâle, plaque de cuisson à gaz, desserte en bois avec plan de travail blanc, ustensiles muraux et fenêtre donnant
+                        sur l'extérieur.
+                    </li>
+                    <li>
+                        <strong>Salle de Bain</strong> — Salle de bain entièrement carrelée en bleu cobalt avec frise décorative en haut, baignoire encastrée, robinetterie murale chromée, accessoires de bain en céramique et fenêtre apportant une belle
+                        clarté naturelle.
+                    </li>
+                    <li>
+                        <strong>Chambre Simple</strong> — Chambre épurée et lumineuse au style minimaliste : lit simple blanc avec coussin en tissu naturel, petite table basse blanche avec vase en grès et eucalyptus, chaise et bureau mural avec bougies
+                        et livres empilés.
+                    </li>
+                    <li>
+                        <strong>Chambre Partagée</strong> — Chambre lumineuse avec fenêtre à voilage beige et tringle dorée. Lit en bois sculpté avec literie rose pâle, second couchage sur sommier en lattes de bois, grand tapis oriental bleu marine et
+                        succulente décorative.
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+
+        <!-- ══════════════════════════════════
+       BARRE LOYER / APPEL À L'ACTION
+  ═══════════════════════════════════ -->
+        <div class="cta-bar">
+            <div class="price-group">
+                <p class="price-label">Loyer Mensuel</p>
+                <p class="price-value">
+                    <sup>DT</sup>1 200
+                    <span class="price-per">/ mois</span>
+                </p>
+            </div>
+            <div class="cta-actions">
+                <button class="btn btn-ghost" type="button">Planifier une Visite</button>
+                <button class="btn btn-primary" type="button">Contacter l'Agent ↗</button>
+            </div>
+        </div>
+
+    </div>
+    <!-- /page-wrapper -->
+
+
+    <!-- ============================================================
+     JAVASCRIPT — LOGIQUE DU SLIDER
+============================================================ -->
+    <script>
+        (function() {
+            'use strict';
+
+            /* ── État ──────────────────────────────────────────── */
+            const TOTAL = 5;
+            let current = 0; // index de la diapositive active (base 0)
+            let animating = false; // verrou anti-rebond
+
+            /* ── Références DOM ────────────────────────────────── */
+            const shell = document.getElementById('slider');
+            const track = document.getElementById('track');
+            const slides = Array.from(track.querySelectorAll('.slide'));
+            const dots = Array.from(document.getElementById('dots').querySelectorAll('.dot'));
+            const counter = document.getElementById('counter');
+            const btnPrev = document.getElementById('btnPrev');
+            const btnNext = document.getElementById('btnNext');
+
+            /* ── Naviguer vers une diapositive ─────────────────── */
+            function goTo(index) {
+                if (animating) return;
+                animating = true;
+
+                // Bouclage circulaire
+                index = ((index % TOTAL) + TOTAL) % TOTAL;
+
+                // Désactiver l'ancienne diapositive
+                slides[current].classList.remove('is-active');
+                dots[current].classList.remove('is-active');
+                dots[current].setAttribute('aria-selected', 'false');
+
+                current = index;
+
+                // Déplacer la piste
+                track.style.transform = `translateX(-${current * 100}%)`;
+
+                // Activer la nouvelle diapositive
+                slides[current].classList.add('is-active');
+                dots[current].classList.add('is-active');
+                dots[current].setAttribute('aria-selected', 'true');
+
+                // Mettre à jour le compteur
+                counter.textContent = `${current + 1} / ${TOTAL}`;
+
+                // Débloquer après la fin de la transition CSS (~550 ms)
+                setTimeout(() => {
+                    animating = false;
+                }, 580);
+            }
+
+            /* ── Boutons fléchés ───────────────────────────────── */
+            btnPrev.addEventListener('click', () => goTo(current - 1));
+            btnNext.addEventListener('click', () => goTo(current + 1));
+
+            /* ── Points de navigation ──────────────────────────── */
+            dots.forEach((dot, i) => dot.addEventListener('click', () => goTo(i)));
+
+            /* ── Navigation clavier (← →) ─────────────────────── */
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'ArrowLeft') goTo(current - 1);
+                if (e.key === 'ArrowRight') goTo(current + 1);
+            });
+
+            /* ── Glissement souris & balayage tactile ──────────── */
+            const SWIPE_THRESHOLD = 50; // pixels minimum pour déclencher
+
+            let dragStart = null;
+            let isDragging = false;
+
+            function onDragStart(x) {
+                dragStart = {
+                    x
+                };
+                isDragging = true;
+                shell.classList.add('is-dragging');
+            }
+
+            function onDragEnd(x) {
+                if (!isDragging || dragStart === null) return;
+                isDragging = false;
+                shell.classList.remove('is-dragging');
+                const delta = dragStart.x - x;
+                if (Math.abs(delta) >= SWIPE_THRESHOLD) {
+                    goTo(delta > 0 ? current + 1 : current - 1);
+                }
+                dragStart = null;
+            }
+
+            // Souris
+            shell.addEventListener('mousedown', (e) => onDragStart(e.clientX));
+            window.addEventListener('mouseup', (e) => onDragEnd(e.clientX));
+            shell.addEventListener('dragstart', (e) => e.preventDefault());
+
+            // Tactile
+            shell.addEventListener('touchstart', (e) => onDragStart(e.touches[0].clientX), {
+                passive: true
+            });
+            shell.addEventListener('touchend', (e) => onDragEnd(e.changedTouches[0].clientX), {
+                passive: true
+            });
+
+            /* ── Défilement automatique toutes les 6 secondes ─── */
+            let autoTimer = setInterval(() => goTo(current + 1), 6000);
+
+            function resetAuto() {
+                clearInterval(autoTimer);
+                autoTimer = setInterval(() => goTo(current + 1), 6000);
+            }
+
+            btnPrev.addEventListener('click', resetAuto);
+            btnNext.addEventListener('click', resetAuto);
+            dots.forEach(d => d.addEventListener('click', resetAuto));
+            shell.addEventListener('mousedown', resetAuto);
+            shell.addEventListener('touchstart', resetAuto, {
+                passive: true
+            });
+
+            /* ── Initialisation ────────────────────────────────── */
+            slides[0].classList.add('is-active');
+
+        })();
+    </script>
+
+</body>
+
+</html>
